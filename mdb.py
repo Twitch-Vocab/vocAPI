@@ -27,9 +27,9 @@ class mdb:
         cls.client = pymongo.MongoClient(uri)
 
         if Config.is_test_system:
-            cls.db = cls.client['mdb_test']
+            cls.db = cls.client['vocab_test']
         else:
-            cls.db = cls.client['mdb_prod']
+            cls.db = cls.client['vocab']
 
 
     @classmethod

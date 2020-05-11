@@ -1,6 +1,6 @@
 import os
 import asyncio
-import graphyte
+#import graphyte
 import socket
 import threading
 import uvloop
@@ -67,8 +67,8 @@ def main(argv):
     LogWriter.setup()
 
     #setup graphyte for grafana metrics
-    if Config.graphite_addr:
-        graphyte.init(Config.graphite_addr,port=int(Config.graphite_port), prefix=socket.gethostname(), interval=10)
+    #if Config.graphite_addr:
+    #    graphyte.init(Config.graphite_addr,port=int(Config.graphite_port), prefix=socket.gethostname(), interval=10)
     
     #setup local cache
     file_storage.setup()

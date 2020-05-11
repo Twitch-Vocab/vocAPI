@@ -5,7 +5,7 @@ import sys
 import traceback
 import socket
 import time
-import graphyte
+#import graphyte
 
 from utils.mid import MID
 from utils.graylog import LogWriter

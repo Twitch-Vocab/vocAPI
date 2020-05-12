@@ -22,7 +22,7 @@ from api.user import register
 from api.user import passwordforgotten
 
 from api import userHandler 
-from api import twitchexHandler
+#from api import twitchexHandler
 
 #SANIC
 from sanic.response import StreamingHTTPResponse
@@ -61,9 +61,8 @@ async def handleMessage(message: dict, headers: dict, module:str, action: str, i
             reply = passwordforgotten.passwordforgotten(message)
 
         #special modules
-        #if module == "twitchex" and action == "hello":
-        if module == "twitchex":
-            reply = twitchexHandler.handle(action, message, headers)
+        #if module == "twitchex":
+        #    reply = twitchexHandler.handle(action, message, headers)
               
         #check session if not login
         session_id = headers.get("session-id", "")

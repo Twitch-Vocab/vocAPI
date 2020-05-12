@@ -14,6 +14,7 @@ from sanic.response import json as sanicJSON
 #from utils.tictoc import TicToc
 
 import mdb
+import messagehub
 import messagehub2
 
 from utils.config import Config
@@ -36,8 +37,11 @@ async def handle_request(request, module, action):
     #get ip from nginx header or fallback to direct caller ip
     requester_ip = request.headers.get("x-real-ip", request.ip)
 
-    reply_doc, status = await messagehub2.handleMessage(request.json, request.headers, module, action, requester_ip)
-    
+    if module == "twitchex":
+        reply_doc, status = await messagehub2.handleMessage(request.json, request.headers, module, action, requester_ip)
+    else:         
+        reply_doc, status = await messagehub.handleMessage(request.json, request.headers, module, action, requester_ip)
+
     #return response.json({"session":session, "route":route, "one": one})
     reply = sanicJSON(reply_doc)
     reply.headers.update({"Access-Control-Allow-Origin": "*"})

@@ -13,7 +13,12 @@ from utils.reply import any_messages
 
 messagetypes = ['hello']
 
-def handle(action: str, message: Dict[any, any]) -> Dict[any, any]:
+#TODO: return a user_doc
+def authenticate(message: Dict[any, any], headers: Dict[any, any]) -> Dict[any, any]:
+    return {"user_name": "fakeuser"}
+
+
+def handle(action: str, message: Dict[any, any], headers: Dict[any, any]) -> Dict[any, any]:
        
     if not action in messagetypes:
         reply = {any_messages.reason: "unkown_type",
@@ -21,6 +26,6 @@ def handle(action: str, message: Dict[any, any]) -> Dict[any, any]:
         return reply
 
     if action == "hello":
-        return hello.hello(message)
+        return hello.hello(message, headers)
 
     return {}

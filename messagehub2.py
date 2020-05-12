@@ -33,10 +33,9 @@ from sanic import response
 async def handleMessage(message: dict, headers: dict, module:str, action: str, ip:str = ""):
     reply = {}
     status = 200
-
     timer = TicToc()
-
     url = ""
+
     if "/" in action:
         url_blocks = action.split("/")
         action = url_blocks.pop(0)
@@ -50,45 +49,17 @@ async def handleMessage(message: dict, headers: dict, module:str, action: str, i
         print("MESSAGE" + str(message))
         is_known = False
 
-        #direct login
-        if module == "user" and action == "login":
-            reply = login.login(message)
-
-        if module == "user" and action == "register":
-            reply = register.register(message)
-        
-        if module == "user" and action == "passwordforgotten":
-            reply = passwordforgotten.passwordforgotten(message)
-
-        #special modules
-        #if module == "twitchex" and action == "hello":
-        if module == "twitchex":
-            reply = twitchexHandler.handle(action, message, headers)
-              
-        #check session if not login
-        session_id = headers.get("session-id", "")
-        if not reply and not session_id:
+        #AUTHENTICATE THE USER AND REPLY WITH FAILURE IF UNSUCCESSFULL
+        user_doc = twitchexHandler.authenticate(message, headers)
+        if not user_doc:
             reply = {any_messages.result: False,
-                     any_messages.reason: "no_session_id"}
+                     any_messages.reason: "authentication_failed"}
             status = 401
-
-        session_doc = {}
-        user_id = ""
-        if not reply:
-            session_doc = session_mgr.session_check(session_id)
-            user_id = session_mgr.get_user_id(session_doc)
-
-        if not reply and not user_id:
-            reply = {any_messages.result: False,
-                     any_messages.reason: "session_id_invalid"}
-            status = 401
-
-        #TODO: renew session for 60min
         
         #NORMAL MODULES
         #MOD USER
-        if not reply and module == "user":
-            reply = userHandler.handle(message, action, session_doc, user_id)
+        if user_doc and module == "twitchex":
+            reply = twitchexHandler.handle(action, message, headers)
             is_known = True
 
         if not is_known and not reply: 
@@ -119,7 +90,7 @@ async def handleMessage(message: dict, headers: dict, module:str, action: str, i
     request_time_ms = timer.end()
     
     print("SENDING GRAYLOG #############################")
-    LogWriter.info("/" + module + "/" + action + "/", {"mod":module, "act": action, "reply": reply_str, "headers": str(headers), "duration_ms": request_time_ms, "ip": ip, "user_id": user_id})
+    LogWriter.info("/" + module + "/" + action + "/", {"mod":module, "act": action, "reply": reply_str, "headers": str(headers), "duration_ms": request_time_ms, "ip": ip})
 
         #try:
         #    graphyte.send("req." + module + "." + action + ".duration_ms", request_time_ms)

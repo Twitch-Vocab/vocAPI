@@ -13,7 +13,6 @@ def hello(message: Dict[any, any], headers: Dict[any, any]):
     
     return {any_messages.result: True,
             "x-extension-jwt" : headers.get("x-extension-jwt", ""),
-            "hello": "hello",
-            "headers": headers}
+            "hello": "hello"}
 
 

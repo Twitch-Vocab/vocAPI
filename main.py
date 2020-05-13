@@ -59,7 +59,7 @@ async def handle_request(request, module, action):
     response = sanicJSON({})
     response.headers.update({"Access-Control-Allow-Methods": "POST, GET, OPTIONS",
                              "Access-Control-Allow-Origin": "*",
-                             "Access-Control-Allow-Headers": "session-id,Content-Type",
+                             "Access-Control-Allow-Headers": "session-id,Content-Type,x-extension-jwt",
                              "Access-Control-Max-Age":86400,
                              "Content-Type":"application/json"})
     return response
